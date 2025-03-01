@@ -1,50 +1,52 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 import { loginEmailTokenPost, loginPost } from '../api/shop';
 
 export type UserData = {
-  user_id: number
-  email: string
-  first_name: string
-  last_name: string
-}
+  user_id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+};
 export type UserStoreState = {
-  authorization: null | string
+  authorization: null | string;
 };
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStoreState => {
-
     if (!!localStorage.userStoreState) {
-      const parsedState = JSON.parse(localStorage.userStoreState) as Record<string, unknown>
-      if (parsedState.authorization !== undefined) {  // do checks on localStorage object here
-        return parsedState as UserStoreState
+      const parsedState = JSON.parse(localStorage.userStoreState) as Record<
+        string,
+        unknown
+      >;
+      if (parsedState.authorization !== undefined) {
+        // do checks on localStorage object here
+        return parsedState as UserStoreState;
       }
     }
     return {
       authorization: null,
-    }
+    };
   },
   getters: {
-    isLoggedIn: (state) => (state.authorization !== null)
+    isLoggedIn: (state) => state.authorization !== null,
   },
   actions: {
-    async login (email: string, password: string) {
-      const response = await loginPost(email, password)
-      this.authorization = response.authorization
-      this.saveToLocalStorage()
+    async login(email: string, password: string) {
+      const response = await loginPost(email, password);
+      this.authorization = response.authorization;
+      this.saveToLocalStorage();
     },
-    async loginEmailToken (token: string) {
-      const response = await loginEmailTokenPost(token)
-      this.authorization = response.authorization
-      this.saveToLocalStorage()
+    async loginEmailToken(token: string) {
+      const response = await loginEmailTokenPost(token);
+      this.authorization = response.authorization;
+      this.saveToLocalStorage();
     },
-    logout () {
+    logout() {
       this.authorization = null;
-      localStorage.clear()
+      localStorage.clear();
     },
-    saveToLocalStorage () {
-      localStorage.userStoreState = JSON.stringify(this.$state)
-    }
-  }
-
-})
+    saveToLocalStorage() {
+      localStorage.userStoreState = JSON.stringify(this.$state);
+    },
+  },
+});

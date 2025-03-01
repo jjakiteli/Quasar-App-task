@@ -104,6 +104,27 @@ paths:
       responses:
         '200':
           description: Article deleted
+  /articles/{query_year}:
+    get:
+      summary: Get user articles starting given year
+      operationId: lib.views.view_articles.get_from
+      security:
+        - jwt: [ ]
+      parameters:
+        - name: query_year
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
 
 components:
   securitySchemes:
@@ -123,6 +144,9 @@ components:
           type: string
         content:
           type: string
+        release_date:
+          type: string
+          format: date
       required:
         - article_id
         - title
