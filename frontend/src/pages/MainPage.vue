@@ -62,9 +62,14 @@ import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
-const articles = ref([]);
+const articles = ref<{ id: number; author: string; title: string; content: string; created_at: string }[]>([]);
 const isDialogOpen = ref(false);
-const form = ref({ title: '', content: '' });
+const form = ref<{ id: number; author: string; title: string; content: string }>({
+  id: 0,
+  author: '',
+  title: '',
+  content: '',
+});
 const isEditing = ref(false);
 
 //Mock initial data
@@ -114,24 +119,24 @@ const getCurrentDate = (): string => {
   return `${year}-${month}-${day}`;
 };
 
-const editArticle = (article) => {
+const editArticle = (article: { id: number; author: string; title: string; content: string; created_at: string }) => {
   form.value = { ...article };
   isEditing.value = true;
   isDialogOpen.value = true;
 };
 
-const deleteArticle = (id) => {
+const deleteArticle = (id: number) => {
   articles.value = articles.value.filter((article) => article.id !== id);
   showAlert('Article deleted successfully');
 };
 
 const closeDialog = () => {
   isDialogOpen.value = false;
-  form.value = { title: '', content: '', releaseDate: '' };
+  form.value = { id: 0, author: '', title: '', content: ''};
   isEditing.value = false;
 };
 
-const showAlert = (message) => {
+const showAlert = (message: string) => {
   $q.notify({
     type: 'positive',
     message: message,
